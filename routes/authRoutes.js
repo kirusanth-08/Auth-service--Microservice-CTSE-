@@ -4,16 +4,14 @@ const { register, login } = require('../controllers/authController');
 
 const authMiddleware = require('../middleware/authMiddleware');
 const { getProfile } = require('../controllers/userController');
+const { validateRegister, validateLogin } = require('../middleware/validators/authValidators');
 
-router.post('/register', register);
-router.post('/login', login);
+// vinu- added input validations
+router.post('/register', validateRegister, register);
+router.post('/login', validateLogin, login);
 
 
-//test protected routes
-router.get('/protected', authMiddleware, (req, res) => {
-    res.json({ message: `Hello ${req.user.id}, you accessed a protected route!` });
-  });
-
+// protected routes
 // inject middleware before controller is called
 router.get('/profile', authMiddleware, getProfile);
 
