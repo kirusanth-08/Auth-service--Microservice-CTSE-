@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "jest --forceExit",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --forceExit"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -13,5 +16,16 @@
     "express-rate-limit": "^6.7.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^8.16.1",
+    "supertest": "^6.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

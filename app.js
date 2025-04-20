@@ -33,9 +33,12 @@ app.use('/api', limiter); // Apply rate limiting to API routes
 
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI)
+// Connect to MongoDB only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log("MongoDB connection error:", err));
+}
 
 // Health check endpoint for Kubernetes probes
 app.get('/health', (req, res) => {
@@ -49,5 +52,12 @@ app.get('/health', (req, res) => {
 
 app.use('/api', authRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Separate server startup from app configuration for testability
+if (require.main === module) {
+  // Only start server if this file is run directly (not imported by tests)
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+// For testing
+module.exports = app;
