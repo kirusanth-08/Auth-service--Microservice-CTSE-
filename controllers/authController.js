@@ -9,22 +9,33 @@ const generateToken = (user) => {
 
 // handle user registration
 exports.register = async (req, res) => {
+    // check if there is any validation error
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
-
+  
     const { email, password } = req.body;
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ email, password: hashedPassword });
-        await user.save();
-        res.status(201).json({ message: "User registered" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
+      // save the user to the database
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = new User({ email, password: hashedPassword });
 
+      await user.save();
+      res.status(201).json({ message: "User registered" });
+
+    } catch (err) {
+      // check if the user already exists 
+      if (err.code === 11000) {
+        // MongoDB duplicate key error
+        return res.status(400).json({ error: "Email already exists" });
+      }
+      res.status(500).json({ error: "Server error: " + err.message });
+    }
+  };
+
+
+  
 // handle user login
 exports.login = async (req, res) => {
     const errors = validationResult(req);
