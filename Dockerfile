@@ -11,9 +11,9 @@ RUN npm install
 COPY . .
 
 # Set environment to production
-ENV NODE_ENV=production
-# Set default port (can be overridden by Kubernetes ConfigMap)
-ENV PORT=3000
+# ENV NODE_ENV=production
+# # Set default port (can be overridden by Kubernetes ConfigMap)
+# ENV PORT=3000
 
 # Expose port
 EXPOSE 3000

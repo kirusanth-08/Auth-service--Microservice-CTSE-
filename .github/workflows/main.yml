@@ -53,4 +53,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/auth-microservice:latest
             docker stop auth-container || true
             docker rm auth-container || true
-            docker run -d --name auth-container -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/auth-microservice:latest
+            docker run -d --name auth-container \
+              -p 3000:3000 \
+              -e MONGO_URI="${{ secrets.MONGO_URI }}" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e ALLOWED_ORIGINS="${{ secrets.ALLOWED_ORIGINS }}" \
+              ${{ secrets.DOCKER_USERNAME }}/auth-microservice:latest
