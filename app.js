@@ -29,7 +29,7 @@ const limiter = rateLimit({
   max: process.env.RATE_LIMIT_MAX_REQUESTS || 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.'
 });
-app.use('/api', limiter); // Apply rate limiting to API routes
+app.use('/api/v1', limiter); // Apply rate limiting to API routes
 
 app.use(express.json());
 
